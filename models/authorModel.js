@@ -1,5 +1,5 @@
-import mongoose, { model } from 'mongoose';
-import validator from 'validator';
+const mongoose = require('mongoose');
+const validator = require('validator');
 
 const authorModel = new mongoose.Schema({
     name: {
@@ -7,14 +7,17 @@ const authorModel = new mongoose.Schema({
         required: [true, 'Author name required'],
         validate: function (nameInput) {
             return (
-                validator.isAlpha(nameInput, 'fr-Fr', { ignore: ' -' }) &&
+                validator.isAlpha(nameInput, 'fr-FR', { ignore: ' -' }) &&
                 validator.isLength(nameInput, { min: 2 })
             )
         },
         unique: true
     }
+}, {
+    collection: 'authors',
+    versionKey: false
 });
 
 const Author = mongoose.model('Author', authorModel);
 
-model.exports = Author;
+module.exports = Author;
