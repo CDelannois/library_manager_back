@@ -1,7 +1,7 @@
-import { genSaltSync, hashSync } from "bcrypt";
+const bcrypt = require('bcrypt')
 
-export default (password) => {
-    const salt = genSaltSync(10);
-    const hash = hashSync(password, salt)
+module.exports = (password => {
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt)
     return hash;
-};
+});

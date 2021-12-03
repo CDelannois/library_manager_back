@@ -3,6 +3,9 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 
+const loginRouter = require('./routes/loginRoute');
+const userRouter = require('./routes/userRoutes');
+
 const app = express();
 
 dotenv.config({ path: './config.env' });
@@ -20,6 +23,8 @@ mongoose.connect(DB, {
 });
 
 app.use(bodyParser.json());
+app.use('/login', loginRouter);
+app.use('/users', userRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {

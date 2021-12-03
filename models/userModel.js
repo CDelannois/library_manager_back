@@ -1,11 +1,16 @@
-import mongoose from 'mongoose';
-import validator from 'validator';
-import bcrypt from 'bcrypt';
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcrypt');
+const hash = require('./../utils/passwordHash');
 
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'User name required.']
+        required: [true, 'User name required.'],
+        validate: function (nameInput) {
+            return validator.isAlpha(nameInput, 'fr-FR', { ignore: ' -' }) &&
+                validator.isLength(nameInput, { min: 2 })
+        }
     },
     email: {
         type: String,
