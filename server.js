@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 
 const loginRouter = require('./routes/loginRoute');
 const userRouter = require('./routes/userRoutes');
+const bookRouter = require('./routes/bookRoutes');
+const authorRouter = require('./routes/authorRoutes');
 
 const app = express();
 
@@ -25,6 +27,8 @@ mongoose.connect(DB, {
 app.use(bodyParser.json());
 app.use('/login', loginRouter);
 app.use('/users', userRouter);
+app.use('/books', bookRouter);
+app.use('/authors', authorRouter);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
