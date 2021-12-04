@@ -42,10 +42,10 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
 
     if (!deletedUser) {
-        return next(new AppError("This user does not exist."));
+        return next(new AppError("This user does not exist.", 404));
     }
 
-    await User.deleteMany({ user: req.params._id });
+    await User.deleteOne({ user: req.params._id });
 
     res.status(204);
 });

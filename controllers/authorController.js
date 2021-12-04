@@ -24,3 +24,27 @@ exports.createAuthor = catchAsync(async (req, res, next) => {
         }
     });
 });
+
+exports.updateAuthor = catchAsync(async (req, res, next) => {
+    const updatedAuthor = await Author.findOneAndUpdate(req.param.id, req.body, {
+        new: true,
+        runValidators: true,
+    });
+
+    res.status(200).json({
+        status: 'updated',
+        data: updatedAuthor,
+    });
+});
+
+exports.deleteAuthor = catchAsync(async (req, res, next) => {
+    const deletedAuthor = await Author.findOneAndDelete(req.param.id);
+
+    if (!deletedAuthor) {
+        return next(new AppError('This author does not exist.', 404));
+    }
+
+    res.status(204).json({
+        status: 'success'
+    });
+});

@@ -7,13 +7,13 @@ const router = express.Router();
 router
     .route('/')
     .get(auth.protect, authorController.getAllAuthors)
-    .post(authorController.createAuthor)
+    .post(auth.protect, authorController.createAuthor)
 
 
-/*router
+router
     .route('/:id')
-    .delete(auth.protect, userController.deleteUser)
-    .patch(auth.protect, userController.updateUser)
-*/
+    .delete(auth.protect, authorController.deleteAuthor)
+    .patch(auth.protect, authorController.updateAuthor)
+
 module.exports = router;
 

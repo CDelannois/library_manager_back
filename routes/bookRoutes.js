@@ -10,10 +10,10 @@ router
     .post(auth.protect, bookController.createBook)
 
 
-/*router
+router
     .route('/:id')
-    .delete(auth.protect, userController.deleteUser)
-    .patch(auth.protect, userController.updateUser)
-*/
+    .delete(auth.protect, bookController.deleteBook)
+    .patch(auth.protect, bookController.updateBook)
+
 module.exports = router;
 

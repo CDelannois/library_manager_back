@@ -18,18 +18,21 @@ const bookModel = new mongoose.Schema({
     note: {
         type: Number,
         validate: function (noteInput) {
-            return validator.isInt(noteInput, { min: 0, max: 5 });
+            let noteInputStr = noteInput.toString();
+            return validator.isInt(noteInputStr, { min: 0, max: 10 });
         }
     },
     belongsTo: {
-        type: ObjectId,
-        required: [true, 'Owner required.']
+        type: ObjectId
     },
     lentTo: {
         type: String,
         validate: function (lentToInput) {
-            return validator.isAlpha(lentToInput, 'fr-Fr', { ignore: ' -' }) &&
-                validator.isLength(lentToInput, { min: 2 })
+            if (lentToInput.length > 0) {
+                return validator.isAlpha(lentToInput, 'fr-FR', { ignore: ' -' })
+            } else {
+                return true
+            }
         }
     }
 }, {
