@@ -15,26 +15,6 @@ const bookModel = new mongoose.Schema({
         type: ObjectId,
         required: [true, 'Author ID required.']
     },
-    note: {
-        type: Number,
-        validate: function (noteInput) {
-            let noteInputStr = noteInput.toString();
-            return validator.isInt(noteInputStr, { min: 0, max: 10 });
-        }
-    },
-    belongsTo: {
-        type: ObjectId
-    },
-    lentTo: {
-        type: String,
-        validate: function (lentToInput) {
-            if (lentToInput.length > 0) {
-                return validator.isAlpha(lentToInput, 'fr-FR', { ignore: ' -' })
-            } else {
-                return true
-            }
-        }
-    }
 }, {
     collection: 'books',
     versionKey: false
