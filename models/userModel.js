@@ -2,6 +2,32 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const hash = require('./../utils/passwordHash');
+const { ObjectId } = require('bson');
+
+const booksSchema = new mongoose.Schema({
+    bookId: {
+        type: ObjectId,
+        required: [true, 'Book ID required'],
+        unique: true
+    },
+    note: {
+        type: Number,
+        validate: function (noteInput) {
+            let noteInputStr = noteInput.toString();
+            return validator.isInt(noteInputStr, { min: 0, max: 10 });
+        }
+    },
+    lentTo: {
+        type: String,
+        validate: function (lentToInput) {
+            if (lentToInput.length > 0) {
+                return validator.isAlpha(lentToInput, 'fr-FR', { ignore: ' -' })
+            } else {
+                return true
+            }
+        }
+    }
+})
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -25,6 +51,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'User password required'],
         select: false,
+    },
+    books: {
+        type: [booksSchema]
     },
     passwordChangedAt: Date
 }, {
