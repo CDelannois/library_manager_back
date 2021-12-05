@@ -1,4 +1,5 @@
 const Author = require('./../models/authorModel');
+const Book = require('./../models/bookModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 
@@ -6,7 +7,7 @@ exports.getAllAuthors = catchAsync(async (req, res, next) => {
     const authors = await Author.find();
 
     res.status(200).json({
-        status: "succes",
+        status: "success",
         results: authors.length,
         data: {
             authors
@@ -26,7 +27,7 @@ exports.createAuthor = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAuthor = catchAsync(async (req, res, next) => {
-    const updatedAuthor = await Author.findOneAndUpdate(req.param.id, req.body, {
+    const updatedAuthor = await Author.findOneAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
     });
@@ -38,7 +39,17 @@ exports.updateAuthor = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteAuthor = catchAsync(async (req, res, next) => {
-    const deletedAuthor = await Author.findOneAndDelete(req.param.id);
+    const book = await Book.findOne(
+        {
+            author: req.params.id
+        }
+    );
+
+    if (book) {
+        return next(new AppError('This author cannot be deleted now, he still has books.', 400));
+    }
+
+    const deletedAuthor = await Author.findOneAndDelete(req.params.id);
 
     if (!deletedAuthor) {
         return next(new AppError('This author does not exist.', 404));

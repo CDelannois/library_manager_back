@@ -2,18 +2,59 @@ const Book = require('./../models/bookModel');
 const Author = require('./../models/authorModel');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
+const { ObjectId } = require('bson');
+
+const pipe = [{
+    $lookup: {
+        from: 'authors',
+        localField: 'author',
+        foreignField: '_id',
+        as: 'author'
+    }
+}, {
+    $unwind: '$author'
+}, {
+    $addFields: {
+        author: '$author.name',
+    }
+}];
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-    const books = await Book.find();
+    const books = await Book.aggregate(pipe);
 
     res.status(200).json({
-        status: "succes",
+        status: "success",
         results: books.length,
         data: {
             books
         }
     })
 });
+
+exports.getBooksFromAuthor = catchAsync(async (req, res, next) => {
+
+    const author = await Author.findById(req.params.id);
+
+    if (!author) {
+        return next(new AppError('This author does not exist.', 404));
+    }
+    console.log(req.params.id)
+    const matchPipe = [{
+        $match: {
+            author: ObjectId(req.params.id)
+        }
+    }]
+        .concat(pipe)
+    const booksFromAuthor = await Book.aggregate(matchPipe);
+
+    res.status(200).json({
+        status: "success",
+        results: booksFromAuthor.length,
+        data: {
+            booksFromAuthor
+        }
+    });
+})
 
 exports.createBook = catchAsync(async (req, res, next) => {
     const authorExist = await Author.findById(req.body.author);
