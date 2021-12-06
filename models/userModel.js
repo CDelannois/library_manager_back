@@ -5,10 +5,9 @@ const hash = require('./../utils/passwordHash');
 const { ObjectId } = require('bson');
 
 const booksSchema = new mongoose.Schema({
-    bookId: {
+    book: {
         type: ObjectId,
-        required: [true, 'Book ID required'],
-        unique: true
+        required: [true, 'Book ID required']
     },
     note: {
         type: Number,
