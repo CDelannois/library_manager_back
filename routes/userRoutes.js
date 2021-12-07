@@ -4,6 +4,9 @@ const auth = require('./../controllers/authController');
 
 const router = express.Router();
 
+router.post('/forgotPassword', auth.forgotPassword)
+router.post('/resetPassword', auth.resetPassword)
+
 router
     .route('/')
     .get(auth.protect, userController.getAllUsers)

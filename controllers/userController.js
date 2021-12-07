@@ -148,6 +148,38 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 
 exports.updateUserBook = catchAsync(async (req, res, next) => {
 
+    const book = await User.find({ "books._id": req.params.id });
+    if (book.length < 1) {
+        return next(new AppError("This copie does not exist.", 404));
+    }
+
+    const { note, lentTo } = req.body;
+
+    let newInfo;
+    if (note && lentTo && lentTo != " ") {
+        newInfo = { $set: { "books.$.note": note, "books.$.lentTo": lentTo } }
+    } else if (note && (lentTo == " " || !lentTo)) {
+        newInfo = { $set: { "books.$.note": note } }
+    } else if (lentTo != " ") {
+        newInfo = { $set: { "books.$.lentTo": lentTo } }
+    } else {
+        return next(new AppError('You must specify a note and/or a person.', 400))
+    }
+
+    if (lentTo === " ") {
+        newInfo.$unset = { "books.$.lentTo": " " }
+    }
+
+    console.log(newInfo)
+    const updatedUserBook = await User.findOneAndUpdate({ 'books._id': req.params.id }, newInfo, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(200).json({
+        status: 'updated',
+        data: updatedUserBook
+    })
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
