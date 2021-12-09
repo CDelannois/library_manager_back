@@ -78,6 +78,10 @@ exports.updateBook = catchAsync(async (req, res, next) => {
         runValidators: true,
     });
 
+    if (!updatedBook) {
+        return next(new AppError('This book does not exist.', 404));
+    }
+
     res.status(200).json({
         status: 'updated',
         data: updatedBook

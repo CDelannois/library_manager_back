@@ -82,7 +82,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     };
 
     const resetToken = user.createPasswordResetToken();
-    await user.save({ validateBeforeSave: false });
+    await user.save(/*{ validateBeforeSave: false }*/);
 });
 exports.resetPassword = catchAsync(async (req, res, next) => {
 

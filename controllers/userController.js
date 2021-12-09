@@ -170,7 +170,6 @@ exports.updateUserBook = catchAsync(async (req, res, next) => {
         newInfo.$unset = { "books.$.lentTo": " " }
     }
 
-    console.log(newInfo)
     const updatedUserBook = await User.findOneAndUpdate({ 'books._id': req.params.id }, newInfo, {
         new: true,
         runValidators: true

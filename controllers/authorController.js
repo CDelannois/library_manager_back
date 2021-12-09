@@ -27,10 +27,14 @@ exports.createAuthor = catchAsync(async (req, res, next) => {
 });
 
 exports.updateAuthor = catchAsync(async (req, res, next) => {
-    const updatedAuthor = await Author.findOneAndUpdate(req.params.id, req.body, {
+    const updatedAuthor = await Author.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true,
     });
+
+    if (!updatedAuthor) {
+        return next(new AppError('This author does not exist.', 404));
+    }
 
     res.status(200).json({
         status: 'updated',
@@ -49,7 +53,7 @@ exports.deleteAuthor = catchAsync(async (req, res, next) => {
         return next(new AppError('This author cannot be deleted now, he still has books.', 400));
     }
 
-    const deletedAuthor = await Author.findOneAndDelete(req.params.id);
+    const deletedAuthor = await Author.findByIdAndDelete(req.params.id);
 
     if (!deletedAuthor) {
         return next(new AppError('This author does not exist.', 404));
