@@ -43,7 +43,7 @@ const userSchema = new mongoose.Schema({
         required: [true, 'User email required.'],
         unique: true,
         validate: function (mailInput) {
-            validator.isEmail(mailInput)
+            return validator.isEmail(mailInput)
         },
         lowercase: true,
     },
